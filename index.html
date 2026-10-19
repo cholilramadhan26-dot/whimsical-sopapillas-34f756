@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>FAHUTAN UNMUL | Database Portal Akademik</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --green:#1a7a3c;--green-light:#22a04b;--green-dark:#145e2e;
+      --teal:#0d7a6e;--yellow:#f5a623;--orange:#e07b1a;
+      --blue:#1a5fa8;--blue-light:#2272cc;--red:#c0392b;
+      --purple:#7d3c98;--gray:#555;--light:#f4f6f9;--white:#fff;
+      --border:#dde2e8;--text:#1f2d3d;--text-muted:#6c757d;
+      --sidebar-w:200px;--header-h:44px;--nav2-h:36px;--nav3-h:34px;
+    }
+    body{font-family:'Inter',sans-serif;background:var(--light);color:var(--text);font-size:13px}
+    a{text-decoration:none;color:inherit}
+
+    /* ─── HEADER TOP ─────────────────────────────── */
+    #header{background:#1e2330;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 10px;height:var(--header-h);flex-wrap:wrap;gap:4px}
+    #header .brand{font-weight:700;font-size:13px;white-space:nowrap;color:#fff}
+    #header .brand span{color:#7ec8a0;margin-left:4px;font-size:11px;font-weight:400}
+    #header .hbtns{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+    .hbtn{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:5px;font-size:11px;cursor:pointer;border:none;font-family:'Inter',sans-serif;font-weight:500;white-space:nowrap}
+    .hbtn.gray{background:#3a3f52;color:#ccc}.hbtn.gray:hover{background:#4a5068}
+    .hbtn.green{background:var(--green-light);color:#fff}.hbtn.green:hover{background:var(--green-dark)}
+    .hbtn.blue{background:var(--blue-light);color:#fff}.hbtn.blue:hover{background:#1756a0}
+    .hbtn.orange{background:var(--orange);color:#fff}.hbtn.orange:hover{background:#c06010}
+    .hbtn.yellow{background:var(--yellow);color:#1f1f1f}.hbtn.yellow:hover{background:#e09510}
+    .hbtn.red{background:#c0392b;color:#fff}
+    .hbtn.purple{background:#8e44ad;color:#fff}.hbtn.purple:hover{background:#7d3c98}
+    #header .info{display:flex;align-items:center;gap:8px;font-size:11px;color:#aaa}
+    #header .info .dot{width:7px;height:7px;background:#2ecc71;border-radius:50%;display:inline-block}
+
+    /* ─── NAV 1 ──────────────────────────────────── */
+    #nav1{background:var(--green);display:flex;align-items:center;gap:2px;padding:0 8px;height:var(--nav2-h);overflow-x:auto}
+    #nav1::-webkit-scrollbar{height:0}
+    .n1btn{padding:5px 12px;color:#c8e6c9;font-size:12px;font-weight:500;cursor:pointer;border-radius:4px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+    .n1btn:hover,.n1btn.active{background:rgba(255,255,255,0.15);color:#fff}
+    .n1btn i{font-size:10px}
+
+    /* ─── TICKER ─────────────────────────────────── */
+    #ticker{background:#1a2a1a;color:#8dcc8d;font-size:11px;padding:4px 10px;overflow:hidden;white-space:nowrap;height:26px;display:flex;align-items:center}
+    #ticker-inner{display:inline-block;animation:ticker 40s linear infinite}
+    @keyframes ticker{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+
+    /* ─── NAV 2 (tabs) ───────────────────────────── */
+    #nav2{background:#fff;border-bottom:2px solid var(--border);display:flex;gap:2px;padding:0 8px;overflow-x:auto;height:var(--nav3-h);align-items:flex-end}
+    #nav2::-webkit-scrollbar{height:0}
+    .tab{padding:6px 12px;font-size:11.5px;cursor:pointer;border-radius:5px 5px 0 0;white-space:nowrap;color:var(--gray);font-weight:500;display:flex;align-items:center;gap:5px;border:1px solid transparent;border-bottom:none;transition:.15s}
+    .tab:hover{background:#f0f4ff;color:var(--blue)}
+    .tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .tab i{font-size:10px}
+
+    /* ─── MAIN LAYOUT ────────────────────────────── */
+    #main{display:flex;min-height:calc(100vh - 140px)}
+    #sidebar{width:var(--sidebar-w);background:#fff;border-right:1px solid var(--border);flex-shrink:0;overflow-y:auto;padding:8px 0}
+    #content{flex:1;padding:12px;overflow-y:auto}
+
+    /* ─── SIDEBAR ────────────────────────────────── */
+    .sb-section{padding:6px 10px 2px;font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px}
+    .sb-item{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;cursor:pointer;border-radius:0;font-size:12px;color:#374151;transition:.15s}
+    .sb-item:hover{background:#f0faf4;color:var(--green)}
+    .sb-item.active{background:var(--green);color:#fff;font-weight:600}
+    .sb-item .left{display:flex;align-items:center;gap:7px}
+    .sb-item .left i{width:14px;text-align:center;font-size:11px}
+    .badge{font-size:10px;padding:1px 6px;border-radius:10px;font-weight:600}
+    .badge.green{background:#dcfce7;color:#166534}
+    .badge.active-b{background:#fff;color:var(--green)}
+    .badge.blue{background:#dbeafe;color:#1e40af}
+    .badge.red{background:#fee2e2;color:#991b1b}
+    .badge.orange{background:#ffedd5;color:#9a3412}
+    .badge.purple{background:#f3e8ff;color:#6b21a8}
+
+    /* ─── DASHBOARD HEADER ───────────────────────── */
+    #dash-hero{background:linear-gradient(135deg,#0f3d1e 0%,#1a5c2a 60%,#0d4a5e 100%);border-radius:12px;padding:18px 20px;margin-bottom:12px;color:#fff;position:relative;overflow:hidden}
+    #dash-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,.04);border-radius:50%}
+    .hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .hero-label{font-size:10px;color:#8dcc8d;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+    .hero-title{font-size:22px;font-weight:700;line-height:1.2;margin-bottom:4px}
+    .hero-sub{font-size:11px;color:#a8d5b5}
+    .hero-btns{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-start;margin-top:4px}
+    .hrbtn{padding:5px 12px;border-radius:20px;font-size:11px;cursor:pointer;border:none;font-weight:600;display:flex;align-items:center;gap:5px}
+    .hrbtn.green{background:#2ecc71;color:#fff}.hrbtn.green:hover{background:#27ae60}
+    .hrbtn.yellow{background:var(--yellow);color:#1f1f1f}
+    .hrbtn.teal{background:#16a085;color:#fff}
+    .hrbtn.orange{background:var(--orange);color:#fff}
+    .online-badge{display:flex;align-items:center;gap:5px;background:rgba(46,204,113,.2);border:1px solid #2ecc71;border-radius:20px;padding:4px 10px;font-size:11px;color:#2ecc71}
+    .online-badge .dot{width:7px;height:7px;background:#2ecc71;border-radius:50%;animation:pulse 1.5s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+    /* ─── STAT CARDS ─────────────────────────────── */
+    .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:14px}
+    .stat-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+    .stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .stat-icon.g{background:rgba(46,204,113,.3);color:#2ecc71}
+    .stat-icon.b{background:rgba(52,152,219,.3);color:#3498db}
+    .stat-icon.o{background:rgba(230,126,34,.3);color:#e67e22}
+    .stat-icon.p{background:rgba(155,89,182,.3);color:#9b59b6}
+    .stat-info .label{font-size:10px;color:#a8d5b5;text-transform:uppercase;letter-spacing:.5px}
+    .stat-info .num{font-size:24px;font-weight:700;color:#fff;line-height:1}
+
+    /* ─── ALERT BOX ──────────────────────────────── */
+    .alert-box{background:#fffbea;border:1px solid #f5a623;border-radius:10px;padding:12px 14px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}
+    .alert-box .icon-bell{color:#f5a623;font-size:18px;margin-top:2px;flex-shrink:0}
+    .alert-title{font-weight:700;font-size:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .alert-title .urgent{background:#c0392b;color:#fff;font-size:10px;padding:1px 7px;border-radius:10px}
+    .alert-desc{font-size:11px;color:#7a6300;margin-top:3px;line-height:1.5}
+    .btn-hide{margin-left:auto;background:none;border:1px solid #e0c060;border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer;color:#7a6300;white-space:nowrap}
+
+    /* ─── COUNTDOWN BOXES ────────────────────────── */
+    .countdown-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}
+    .cd-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+    .cd-card.total{background:#1a5c2a;color:#fff;border-color:#1a5c2a}
+    .cd-label{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px;display:flex;align-items:center;gap:5px}
+    .cd-card.total .cd-label{color:#a8d5b5}
+    .cd-num{font-size:32px;font-weight:700;color:var(--green);line-height:1}
+    .cd-card.total .cd-num{color:#fff}
+    .cd-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
+    .cd-card.total .cd-sub{color:#c8e6c9}
+
+    /* ─── FILTER BAR ─────────────────────────────── */
+    .filter-bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:12px;background:#fff;padding:10px 12px;border-radius:10px;border:1px solid var(--border)}
+    .fbtn{padding:5px 12px;border-radius:20px;font-size:11.5px;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--gray);font-weight:500;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:.15s}
+    .fbtn:hover{border-color:var(--green);color:var(--green)}
+    .fbtn.active{background:var(--green);color:#fff;border-color:var(--green)}
+    .fbtn .cnt{background:rgba(0,0,0,.15);border-radius:10px;padding:0 5px;font-size:10px}
+    .fbtn.active .cnt{background:rgba(255,255,255,.25)}
+    .filter-right{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .filter-right select{padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:11.5px;color:var(--gray)}
+    .filter-right input{padding:5px 10px;border:1px solid var(--border);border-radius:6px;font-size:11.5px;width:150px}
+
+    /* ─── SEMINAR CARD ───────────────────────────── */
+    .seminar-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;transition:.15s}
+    .seminar-card:hover{box-shadow:0 2px 10px rgba(0,0,0,.08);border-color:#b0c4de}
+    .sc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+    .badge-level{padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+    .badge-level.s1{background:#dbeafe;color:#1e40af}
+    .badge-level.s2{background:#dcfce7;color:#166534}
+    .badge-level.s3{background:#f3e8ff;color:#6b21a8}
+    .badge-hari{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600;background:#fee2e2;color:#991b1b}
+    .badge-type{padding:2px 8px;border-radius:12px;font-size:10px;background:#e0f2fe;color:#0369a1}
+    .sc-datetime{font-size:11px;color:var(--text-muted);margin-left:auto;display:flex;align-items:center;gap:4px}
+    .sc-name{font-size:15px;font-weight:700;margin-bottom:2px}
+    .sc-nim{font-size:11px;color:var(--text-muted);margin-bottom:6px}
+    .sc-title{font-size:12px;color:#374151;font-style:italic;margin-bottom:10px;line-height:1.4}
+    .sc-info{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .sc-info-item{font-size:11px}
+    .sc-info-item .lbl{color:var(--text-muted);font-weight:500;margin-bottom:2px}
+    .sc-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+    .acbtn{padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer;border:none;font-weight:500;display:flex;align-items:center;gap:4px}
+    .acbtn.green{background:#dcfce7;color:#166534}.acbtn.green:hover{background:#bbf7d0}
+    .acbtn.blue{background:#dbeafe;color:#1e40af}.acbtn.blue:hover{background:#bfdbfe}
+    .acbtn.orange{background:#ffedd5;color:#9a3412}.acbtn.orange:hover{background:#fed7aa}
+    .acbtn.red{background:#fee2e2;color:#991b1b}.acbtn.red:hover{background:#fecaca}
+    .acbtn.gray{background:#f3f4f6;color:#374151}.acbtn.gray:hover{background:#e5e7eb}
+
+    /* ─── FORM MODAL ─────────────────────────────── */
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:16px}
+    .modal.show{display:flex}
+    .modal-box{background:#fff;border-radius:14px;padding:24px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+    .modal-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .modal-title i{color:var(--green)}
+    .form-group{margin-bottom:12px}
+    .form-group label{display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:var(--gray)}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:7px;font-size:13px;font-family:'Inter',sans-serif;transition:.15s}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(26,122,60,.1)}
+    .form-group textarea{resize:vertical;min-height:70px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn-submit{background:var(--green);color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer;width:100%;margin-top:4px}
+    .btn-submit:hover{background:var(--green-dark)}
+    .btn-close-modal{position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;cursor:pointer;color:var(--gray)}
+
+    /* ─── TOAST ──────────────────────────────────── */
+    #toast{position:fixed;bottom:20px;right:20px;background:#1a5c2a;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:2000;display:none;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    #toast.show{display:flex}
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media(max-width:700px){
+      :root{--sidebar-w:0px}
+      #sidebar{display:none;position:fixed;inset:0 auto 0 0;width:220px;z-index:500;box-shadow:3px 0 20px rgba(0,0,0,.2)}
+      #sidebar.open{display:block}
+      #mob-toggle{display:flex}
+      .hero-title{font-size:17px}
+      .stat-row{grid-template-columns:1fr 1fr}
+      .countdown-row{grid-template-columns:1fr 1fr}
+      .form-row{grid-template-columns:1fr}
+      #header .info{display:none}
+    }
+    #mob-toggle{display:none;align-items:center;justify-content:center;width:30px;height:30px;background:#3a3f52;border-radius:6px;cursor:pointer;color:#fff;font-size:14px;flex-shrink:0}
+    #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:499}
+    #overlay.show{display:block}
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div id="header">
+  <div style="display:flex;align-items:center;gap:8px">
+    <div id="mob-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+    <div class="brand">🌿 FAHUTAN UNMUL <span>| DATABASE PORTAL AKADEMIK</span></div>
+  </div>
+  <div class="hbtns">
+    <button class="hbtn gray" onclick="showToast('Mode Auto aktif')"><i class="fas fa-sync-alt"></i> Auto</button>
+    <button class="hbtn gray" onclick="showToast('Desktop mode')"><i class="fas fa-desktop"></i> Desktop</button>
+    <button class="hbtn gray" onclick="showToast('Android mode')"><i class="fab fa-android"></i> Android</button>
+    <button class="hbtn yellow" onclick="copyLink()"><i class="fas fa-copy"></i> Salin Link</button>
+    <button class="hbtn blue" onclick="showToast('Kurus Data…')"><i class="fas fa-database"></i> Kurus Data</button>
+    <button class="hbtn gray" onclick="showToast('Daftar Link')"><i class="fas fa-list"></i> Daftar Link</button>
+    <button class="hbtn green" onclick="showToast('Buka di HP & PC')"><i class="fas fa-mobile-alt"></i> Instal di HP & PC</button>
+    <button class="hbtn orange" onclick="openModal('form-modal')"><i class="fas fa-user-graduate"></i> Form Mahasiswa</button>
+  </div>
+  <div class="info">
+    <span class="dot"></span> Online&nbsp;302ms &nbsp;|&nbsp;
+    <i class="fas fa-user-circle"></i> ADMIN &nbsp;|&nbsp;
+    <i class="fas fa-sign-out-alt"></i>
+  </div>
+</div>
+
+<!-- ═══ NAV 1 ═══ -->
+<div id="nav1">
+  <div class="n1btn active"><i class="fas fa-home"></i> HOME</div>
+  <div class="n1btn" onclick="openModal('form-modal')"><i class="fas fa-plus-circle"></i> INSERT</div>
+  <div class="n1btn" onclick="showToast('Data…')"><i class="fas fa-table"></i> DATA</div>
+  <div class="n1btn" onclick="showToast('Cetak…')"><i class="fas fa-print"></i> CETAK</div>
+  <div class="n1btn" onclick="showToast('View…')"><i class="fas fa-eye"></i> VIEW</div>
+  <div class="n1btn" onclick="showToast('Daftar Link')"><i class="fas fa-link"></i> Daftar Link</div>
+  <div class="n1btn" onclick="showHelp()"><i class="fas fa-question-circle"></i> HELP</div>
+</div>
+
+<!-- ═══ TICKER ═══ -->
+<div id="ticker">
+  <span id="ticker-inner">
+    &nbsp;&nbsp;&nbsp;🎓 Selamat Datang di Dashboard Aplikasi Seminar Sarjana &amp; Pascasarjana &nbsp;•&nbsp;
+    🏫 Fakultas Kehutanan Universitas Mulawarman &nbsp;•&nbsp;
+    📋 Layanan Administrasi Ujian Skripsi, Tesis, Disertasi, &amp; Ujian Terbuka &nbsp;•&nbsp;
+    ⚠️ Pastikan data mahasiswa dan dewan penguji sudah terisi sebelum seminar &nbsp;•&nbsp;
+    📅 Seminar hari ini harap dikonfirmasi minimal H-1 &nbsp;&nbsp;&nbsp;
+  </span>
+</div>
+
+<!-- ═══ TABS NAV 2 ═══ -->
+<div id="nav2">
+  <div class="tab active" onclick="switchTab(this,'dashboard')"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
+  <div class="tab" onclick="switchTab(this,'s1')"><i class="fas fa-graduation-cap"></i> Data S1</div>
+  <div class="tab" onclick="switchTab(this,'s2')"><i class="fas fa-graduation-cap"></i> Data S2</div>
+  <div class="tab" onclick="switchTab(this,'s3')"><i class="fas fa-graduation-cap"></i> Data S3 (Doktor)</div>
+  <div class="tab" onclick="switchTab(this,'ujian')"><i class="fas fa-file-alt"></i> Ujian Terbuka S3</div>
+  <div class="tab" onclick="switchTab(this,'dosen')"><i class="fas fa-chalkboard-teacher"></i> Database Dosen</div>
+  <div class="tab" onclick="switchTab(this,'nilai')"><i class="fas fa-star"></i> Form Nilai Dosen</div>
+  <div class="tab" onclick="openModal('form-modal')"><i class="fas fa-wpforms"></i> Form Pendaftaran</div>
+  <div class="tab" onclick="switchTab(this,'cetak')"><i class="fas fa-print"></i> Cetak Berkas</div>
+</div>
+
+<!-- ═══ OVERLAY ═══ -->
+<div id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- ═══ MAIN ═══ -->
+<div id="main">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-section">Menu Utama</div>
+    <div class="sb-item active" onclick="setSbActive(this,'dashboard')">
+      <div class="left"><i class="fas fa-tachometer-alt"></i> Dashboard Overview</div>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-clipboard-list"></i> Catatan &amp; Usulan Revisi</div>
+    </div>
+
+    <div class="sb-section">Registrasi Seminar</div>
+    <div class="sb-item" onclick="setSbActive(this);filterByLevel('S1')">
+      <div class="left"><i class="fas fa-user-graduate" style="color:#3498db"></i> Registrasi S1</div>
+      <span class="badge green" id="sb-s1-cnt">14</span>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this);filterByLevel('S2')">
+      <div class="left"><i class="fas fa-user-graduate" style="color:#2ecc71"></i> Registrasi S2</div>
+      <span class="badge blue" id="sb-s2-cnt">2</span>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this);filterByLevel('S3')">
+      <div class="left"><i class="fas fa-user-graduate" style="color:#9b59b6"></i> Registrasi S3 (Doktor)</div>
+      <span class="badge purple" id="sb-s3-cnt">3</span>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-file-alt" style="color:#e74c3c"></i> Ujian Terbuka S3</div>
+      <span class="badge red">6 Proses</span>
+    </div>
+
+    <div class="sb-section">Laboratorium &amp; Dosen</div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-flask" style="color:#27ae60"></i> Nama Lab (Card Bam...)</div>
+      <span class="badge green">3 Lab</span>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-chalkboard-teacher" style="color:#2980b9"></i> Database Dosen</div>
+      <span class="badge blue">36 Dosen</span>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-calendar-check" style="color:#e67e22"></i> Rekap Kehadiran Dosen</div>
+      <span class="badge orange">5</span>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-user-check" style="color:#c0392b"></i> Rekap Kehadiran Mhs...</div>
+      <span class="badge red">13</span>
+    </div>
+
+    <div class="sb-section">Penilaian &amp; Nilai Akhir</div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-star" style="color:#3498db"></i> Penilaian S1</div>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-star" style="color:#2ecc71"></i> Penilaian S2</div>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-star" style="color:#9b59b6"></i> Penilaian S3 (Kolokium)</div>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-star" style="color:#e74c3c"></i> Penilaian Ujian Terbuka</div>
+      <span class="badge red">6</span>
+    </div>
+    <div class="sb-item" onclick="setSbActive(this)">
+      <div class="left"><i class="fas fa-chart-bar" style="color:#f39c12"></i> Rekapitulasi Nilai R...</div>
+      <span class="badge orange">S1/S2</span>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <!-- ─── DASHBOARD VIEW ─── -->
+    <div id="view-dashboard">
+
+      <!-- Hero -->
+      <div id="dash-hero">
+        <div class="hero-top">
+          <div>
+            <div class="hero-label">🏫 FAKULTAS KEHUTANAN • UNMUL • SISTEM AKADEMIK 2026</div>
+            <div class="hero-title">Sistem Informasi &amp;<br>Manajemen Seminar</div>
+            <div class="hero-sub">Portal Administrasi Ujian Skripsi, Tesis &amp; Disertasi</div>
+          </div>
+          <div>
+            <div class="online-badge"><span class="dot"></span> Online Real-Time &nbsp;<small>Aktif Otomatis</small></div>
+            <div class="hero-btns" style="margin-top:10px">
+              <button class="hrbtn yellow" onclick="copyLink()"><i class="fas fa-copy"></i> Salin Link Utama</button>
+              <button class="hrbtn teal" onclick="openModal('form-modal')"><i class="fas fa-wpforms"></i> Salin Link Form</button>
+              <button class="hrbtn orange" onclick="showToast('Domain publik dibuka')"><i class="fas fa-globe"></i> Domain Publik</button>
+            </div>
+            <button style="margin-top:8px;padding:4px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#aaa;font-size:11px;cursor:pointer" onclick="showToast('Reset data cache')">
+              <i class="fas fa-redo"></i> Reset
+            </button>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-icon g"><i class="fas fa-graduation-cap"></i></div>
+            <div class="stat-info">
+              <div class="label">Total Seminar</div>
+              <div class="num" id="total-cnt">19</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon b"><i class="fas fa-user"></i></div>
+            <div class="stat-info">
+              <div class="label">Sarjana (S1)</div>
+              <div class="num" id="s1-cnt">14</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon o"><i class="fas fa-user-tie"></i></div>
+            <div class="stat-info">
+              <div class="label">Magister (S2)</div>
+              <div class="num" id="s2-cnt">2</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon p"><i class="fas fa-user-graduate"></i></div>
+            <div class="stat-info">
+              <div class="label">Doktor (S3)</div>
+              <div class="num" id="s3-cnt">3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Box -->
+      <div class="alert-box" id="alert-box">
+        <div class="icon-bell"><i class="fas fa-bell fa-shake"></i></div>
+        <div style="flex:1">
+          <div class="alert-title">
+            PENGINGAT OTOMATIS JADWAL SEMINAR (&lt; 3 HARI)
+            <span class="urgent">3 S PERLU TINDAK LANJUT</span>
+          </div>
+          <div class="alert-desc">Sistem menyorot mahasiswa yang seminar dalam H-H, H-1, H-2, &amp; H-3 agar admin dapat segera mengkonfirmasi dewan penguji, menyiapkan berkas acara, dan mengirimkan pengingat WAG.</div>
+        </div>
+        <button class="btn-hide" onclick="document.getElementById('alert-box').style.display='none'">
+          <i class="fas fa-eye-slash"></i> Sembunyikan
+        </button>
+      </div>
+
+      <!-- Countdown Row -->
+      <div class="countdown-row">
+        <div class="cd-card">
+          <div class="cd-label"><i class="fas fa-flag" style="color:#e74c3c"></i> HARI-H (HARI INI)</div>
+          <div class="cd-num" id="cd-hh">1</div>
+          <div class="cd-sub">Seminar hari ini</div>
+        </div>
+        <div class="cd-card">
+          <div class="cd-label"><i class="fas fa-clock" style="color:#f39c12"></i> H-1 (BESOK)</div>
+          <div class="cd-num" id="cd-h1">1</div>
+          <div class="cd-sub">Jadwal besok hari</div>
+        </div>
+        <div class="cd-card">
+          <div class="cd-label"><i class="fas fa-calendar-alt" style="color:#3498db"></i> H-2 &amp; H-3</div>
+          <div class="cd-num" id="cd-h23">1</div>
+          <div class="cd-sub">2 – 3 hari ke depan</div>
+        </div>
+        <div class="cd-card total">
+          <div class="cd-label"><i class="fas fa-exclamation-triangle"></i> TOTAL &lt; 3 HARI</div>
+          <div class="cd-num" id="cd-total">3</div>
+          <div class="cd-sub">Semua yang mendekati</div>
+        </div>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <button class="fbtn active" onclick="setFilter(this,'semua')"><i class="fas fa-list"></i> Semua &lt; 3 Hari <span class="cnt" id="f-semua-cnt">3</span></button>
+        <button class="fbtn" onclick="setFilter(this,'hh')">Hari-H <span class="cnt">1</span></button>
+        <button class="fbtn" onclick="setFilter(this,'h1')">H-1 Besok <span class="cnt">1</span></button>
+        <button class="fbtn" onclick="setFilter(this,'h23')">H-2 / H-3 <span class="cnt">1</span></button>
+        <button class="fbtn" onclick="setFilter(this,'lewat')">Lewat Jadwal <span class="cnt" id="f-lewat-cnt">11</span></button>
+        <button class="fbtn" onclick="setFilter(this,'all')">Tampilkan Semua</button>
+        <div class="filter-right">
+          <select onchange="filterByProgram(this.value)">
+            <option value="">Semua Program</option>
+            <option value="S1">Sarjana S1</option>
+            <option value="S2">Magister S2</option>
+            <option value="S3">Doktor S3</option>
+          </select>
+          <input type="text" placeholder="🔍 Cari nama/nim..." oninput="searchCards(this.value)"/>
+        </div>
+      </div>
+
+      <!-- Seminar Cards -->
+      <div id="cards-container"></div>
+      <button onclick="openModal('form-modal')" style="width:100%;padding:12px;border:2px dashed #b0c4de;border-radius:10px;background:#f8faff;color:#3498db;font-size:13px;cursor:pointer;margin-top:4px;font-family:'Inter',sans-serif">
+        <i class="fas fa-plus-circle"></i> Tambah Data Seminar Baru
+      </button>
+    </div>
+
+    <!-- ─── OTHER VIEWS ─── -->
+    <div id="view-s1" style="display:none">
+      <h2 style="margin-bottom:12px"><i class="fas fa-graduation-cap" style="color:#3498db"></i> Data Mahasiswa S1</h2>
+      <div id="cards-s1"></div>
+    </div>
+    <div id="view-s2" style="display:none">
+      <h2 style="margin-bottom:12px"><i class="fas fa-graduation-cap" style="color:#2ecc71"></i> Data Mahasiswa S2</h2>
+      <div id="cards-s2"></div>
+    </div>
+    <div id="view-s3" style="display:none">
+      <h2 style="margin-bottom:12px"><i class="fas fa-graduation-cap" style="color:#9b59b6"></i> Data Mahasiswa S3 (Doktor)</h2>
+      <div id="cards-s3"></div>
+    </div>
+    <div id="view-ujian" style="display:none"><h2>Ujian Terbuka S3 — coming soon</h2></div>
+    <div id="view-dosen" style="display:none"><h2>Database Dosen — coming soon</h2></div>
+    <div id="view-nilai" style="display:none"><h2>Form Nilai Dosen — coming soon</h2></div>
+    <div id="view-cetak" style="display:none"><h2>Cetak Berkas — coming soon</h2></div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══ MODAL FORM PENDAFTARAN ═══ -->
+<div class="modal" id="form-modal">
+  <div class="modal-box">
+    <button class="btn-close-modal" onclick="closeModal('form-modal')">&times;</button>
+    <div class="modal-title"><i class="fas fa-graduation-cap"></i> Form Pendaftaran Seminar</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nama Lengkap *</label>
+        <input type="text" id="f-nama" placeholder="Nama mahasiswa..."/>
+      </div>
+      <div class="form-group">
+        <label>NIM *</label>
+        <input type="text" id="f-nim" placeholder="NIM..."/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Program Studi *</label>
+        <select id="f-level">
+          <option value="">— Pilih —</option>
+          <option value="S1">Sarjana S1</option>
+          <option value="S2">Magister S2</option>
+          <option value="S3">Doktor S3</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Jenis Seminar *</label>
+        <select id="f-jenis">
+          <option value="">— Pilih —</option>
+          <option value="Seminar Hasil">Seminar Hasil</option>
+          <option value="Seminar Proposal">Seminar Proposal</option>
+          <option value="Ujian Terbuka">Ujian Terbuka</option>
+          <option value="Kolokium">Kolokium</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Judul Penelitian *</label>
+      <textarea id="f-judul" placeholder="Judul penelitian / skripsi / tesis / disertasi..."></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Tanggal Seminar *</label>
+        <input type="date" id="f-tanggal"/>
+      </div>
+      <div class="form-group">
+        <label>Jam Seminar *</label>
+        <input type="time" id="f-jam" value="09:00"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Ruangan</label>
+        <input type="text" id="f-ruangan" placeholder="Ruangan / Lokasi..."/>
+      </div>
+      <div class="form-group">
+        <label>No. HP Mahasiswa</label>
+        <input type="tel" id="f-hp" placeholder="08..."/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Dosen Pembimbing 1 *</label>
+      <input type="text" id="f-p1" placeholder="Nama dosen pembimbing utama..."/>
+    </div>
+    <div class="form-group">
+      <label>Dosen Pembimbing 2</label>
+      <input type="text" id="f-p2" placeholder="Nama dosen pembimbing 2 (jika ada)..."/>
+    </div>
+    <button class="btn-submit" onclick="submitForm()"><i class="fas fa-save"></i> Simpan Data Seminar</button>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div id="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Berhasil!</span></div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const today = new Date();
+function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
+function fmtDate(d){return d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function fmtDateShort(d){return d.toLocaleDateString('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'})}
+function fmtTime(t){return t}
+function getDiff(dateStr){
+  const d=new Date(dateStr);d.setHours(0,0,0,0);
+  const t=new Date();t.setHours(0,0,0,0);
+  return Math.round((d-t)/(1000*60*60*24));
+}
+function getDiffLabel(diff){
+  if(diff===0) return {tag:'Hari Ini (Hari-H)',cls:'badge-hari',filter:'hh'};
+  if(diff===1) return {tag:'H-1 (Besok)',cls:'',filter:'h1'};
+  if(diff===2||diff===3) return {tag:`H-${diff}`,cls:'',filter:'h23'};
+  if(diff<0) return {tag:'Lewat Jadwal',cls:'',filter:'lewat'};
+  return {tag:`H-${diff}`,cls:'',filter:'all'};
+}
+
+let seminars = JSON.parse(localStorage.getItem('seminars-unmul')||'null') || [
+  {id:1,nama:'Roni',nim:'7004011004',level:'S1',jenis:'Seminar Hasil',judul:'Karakteristik Fisik dan Kimia Arang Aktif dari Tempurung Kelapa Sawit Sebagai Adsorben Logam Berat',tanggal:fmtDateShort(today),jam:'11.30',ruangan:'Ruang Sidang Utama',hp:'081234567890',p1:'Dr. Ir. Ahmad Yani, M.P.',p2:'Dr. Ir. Siti Rahmawati, M.Sc.'},
+  {id:2,nama:'Sari Dewi Lestari',nim:'2004011012',level:'S1',jenis:'Seminar Hasil',judul:'Analisis Biodiversitas Serangga Tanah pada Tegakan Akasia di Hutan Tanaman Industri',tanggal:fmtDateShort(addDays(today,1)),jam:'09.00',ruangan:'Lab Ekologi Hutan',hp:'082345678901',p1:'Prof. Dr. Ir. Bambang Suryanto',p2:'Dr. Rina Kusumawati, M.Si.'},
+  {id:3,nama:'Hendra Prasetyo',nim:'2105011008',level:'S2',jenis:'Seminar Proposal',judul:'Efektivitas Penggunaan Biochar dari Limbah Pertanian sebagai Amelioran Tanah Gambut',tanggal:fmtDateShort(addDays(today,2)),jam:'10.00',ruangan:'Ruang Seminar Lt.2',hp:'083456789012',p1:'Prof. Dr. Ir. Susanto, M.P.',p2:'Dr. Wahyu Pratama, M.Si.'},
+  {id:4,nama:'Andi Kurniawan',nim:'2004011023',level:'S1',jenis:'Seminar Hasil',judul:'Potensi Karbon Tersimpan pada Hutan Mangrove di Pesisir Kalimantan Timur',tanggal:fmtDateShort(addDays(today,-3)),jam:'13.00',ruangan:'Ruang Sidang Utama',hp:'084567890123',p1:'Dr. Ir. Mulyadi, M.P.',p2:''},
+  {id:5,nama:'Fatimah Zahra',nim:'2005011034',level:'S1',jenis:'Seminar Hasil',judul:'Inventarisasi Jenis Mamalia Kecil di Kawasan Konservasi Hutan Bukit Soeharto',tanggal:fmtDateShort(addDays(today,-5)),jam:'09.30',ruangan:'Ruang Seminar Kecil',hp:'085678901234',p1:'Dr. Yuliana, M.Sc.',p2:'Dr. Ridwan, M.Si.'},
+  {id:6,nama:'Ahmad Fauzan',nim:'2003011045',level:'S3',jenis:'Kolokium',judul:'Model Simulasi Dinamika Karbon Hutan Tropis Kalimantan dengan Pendekatan Remote Sensing',tanggal:fmtDateShort(addDays(today,3)),jam:'10.30',ruangan:'Ruang Doktor',hp:'086789012345',p1:'Prof. Dr. Ir. Hartono, Ph.D.',p2:'Prof. Dr. Irawati, M.Sc.'},
+  {id:7,nama:'Dewi Permatasari',nim:'2006011056',level:'S2',jenis:'Seminar Hasil',judul:'Pengaruh Intensitas Cahaya terhadap Pertumbuhan Semai Meranti di Bawah Tegakan',tanggal:fmtDateShort(addDays(today,-8)),jam:'11.00',ruangan:'Ruang Lab Silvikultur',hp:'087890123456',p1:'Dr. Ir. Hermawan, M.P.',p2:'Dr. Sri Wahyuni, M.Sc.'},
+];
+let nextId = seminars.reduce((a,b)=>Math.max(a,b.id),0)+1;
+function saveData(){localStorage.setItem('seminars-unmul',JSON.stringify(seminars))}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+let currentFilter='semua', currentProgram='', searchQ='';
+
+function parseDate(str){
+  // dd/mm/yyyy
+  const parts=str.split('/');
+  if(parts.length===3) return new Date(+parts[2],+parts[1]-1,+parts[0]);
+  return new Date(str);
+}
+
+function renderCards(){
+  const c=document.getElementById('cards-container');
+  let list=seminars.slice().sort((a,b)=>parseDate(a.tanggal)-parseDate(b.tanggal));
+  if(searchQ){
+    const q=searchQ.toLowerCase();
+    list=list.filter(s=>s.nama.toLowerCase().includes(q)||s.nim.includes(q)||s.judul.toLowerCase().includes(q));
+  }
+  if(currentProgram) list=list.filter(s=>s.level===currentProgram);
+
+  const toDiff=(s)=>getDiff(parseDate(s.tanggal));
+
+  if(currentFilter==='semua') list=list.filter(s=>{const d=toDiff(s);return d>=0&&d<=3});
+  else if(currentFilter==='hh') list=list.filter(s=>toDiff(s)===0);
+  else if(currentFilter==='h1') list=list.filter(s=>toDiff(s)===1);
+  else if(currentFilter==='h23') list=list.filter(s=>toDiff(s)===2||toDiff(s)===3);
+  else if(currentFilter==='lewat') list=list.filter(s=>toDiff(s)<0);
+  // 'all' = no extra filter
+
+  updateStats();
+  if(list.length===0){c.innerHTML='<div style="text-align:center;padding:40px;color:#999"><i class="fas fa-inbox fa-3x"></i><br><br>Tidak ada data seminar ditemukan.</div>';return}
+
+  c.innerHTML=list.map(s=>{
+    const diff=toDiff(s);
+    const {tag,cls,filter}=getDiffLabel(diff);
+    const lvlCls=s.level==='S1'?'s1':s.level==='S2'?'s2':'s3';
+    const dateObj=parseDate(s.tanggal);
+    const dayStr=dateObj.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    return `
+    <div class="seminar-card" data-id="${s.id}" data-filter="${filter}" data-level="${s.level}">
+      <div class="sc-top">
+        <span class="badge-level ${lvlCls}">${s.level}</span>
+        <span class="badge-hari">${tag}</span>
+        <span class="badge-type">${s.jenis}</span>
+        <span class="sc-datetime"><i class="fas fa-calendar-alt"></i> ${dayStr} &nbsp;<i class="fas fa-clock"></i> ${s.jam} WITA</span>
+      </div>
+      <div class="sc-name">${s.nama} <small style="font-size:12px;font-weight:400;color:#666">(NIM: ${s.nim})</small></div>
+      <div class="sc-title">"${s.judul}"</div>
+      <div class="sc-info">
+        <div class="sc-info-item"><div class="lbl">DEWAN PEMBIMBING &amp; PENGUJI:</div>
+          P1: ${s.p1||'-'}<br>${s.p2?'P2: '+s.p2:''}
+        </div>
+        <div class="sc-info-item"><div class="lbl">RUANGAN &amp; KONTAK:</div>
+          📍 ${s.ruangan||'-'}<br>📱 ${s.hp||'-'}
+        </div>
+      </div>
+      <div class="sc-actions">
+        <button class="acbtn green" onclick="showToast('WAG terkirim ke dewan penguji')"><i class="fas fa-paper-plane"></i> Kirim WAG</button>
+        <button class="acbtn blue" onclick="editEntry(${s.id})"><i class="fas fa-edit"></i> Edit</button>
+        <button class="acbtn orange" onclick="showToast('Berkas dicetak')"><i class="fas fa-print"></i> Cetak Berkas</button>
+        <button class="acbtn red" onclick="deleteEntry(${s.id})"><i class="fas fa-trash"></i> Hapus</button>
+        <button class="acbtn gray" onclick="showToast('Detail seminar')"><i class="fas fa-info-circle"></i> Detail</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats(){
+  const now=new Date();now.setHours(0,0,0,0);
+  const counts={S1:0,S2:0,S3:0,hh:0,h1:0,h23:0,lewat:0};
+  seminars.forEach(s=>{
+    counts[s.level]=(counts[s.level]||0)+1;
+    const d=getDiff(parseDate(s.tanggal));
+    if(d===0)counts.hh++;
+    else if(d===1)counts.h1++;
+    else if(d===2||d===3)counts.h23++;
+    else if(d<0)counts.lewat++;
+  });
+  document.getElementById('total-cnt').textContent=seminars.length;
+  document.getElementById('s1-cnt').textContent=counts.S1||0;
+  document.getElementById('s2-cnt').textContent=counts.S2||0;
+  document.getElementById('s3-cnt').textContent=counts.S3||0;
+  document.getElementById('sb-s1-cnt').textContent=counts.S1||0;
+  document.getElementById('sb-s2-cnt').textContent=counts.S2||0;
+  document.getElementById('sb-s3-cnt').textContent=counts.S3||0;
+  document.getElementById('cd-hh').textContent=counts.hh;
+  document.getElementById('cd-h1').textContent=counts.h1;
+  document.getElementById('cd-h23').textContent=counts.h23;
+  document.getElementById('cd-total').textContent=counts.hh+counts.h1+counts.h23;
+  document.getElementById('f-semua-cnt').textContent=counts.hh+counts.h1+counts.h23;
+  document.getElementById('f-lewat-cnt').textContent=counts.lewat;
+}
+
+function renderByLevel(level, containerId){
+  const c=document.getElementById(containerId);
+  const list=seminars.filter(s=>s.level===level);
+  if(!list.length){c.innerHTML='<p style="color:#999">Tidak ada data.</p>';return}
+  c.innerHTML=list.map(s=>`
+    <div class="seminar-card">
+      <div class="sc-top"><span class="badge-level ${level.toLowerCase()}">${level}</span><span class="badge-type">${s.jenis}</span>
+        <span class="sc-datetime"><i class="fas fa-calendar-alt"></i> ${s.tanggal} &nbsp;<i class="fas fa-clock"></i> ${s.jam} WITA</span></div>
+      <div class="sc-name">${s.nama} <small style="font-size:12px;font-weight:400;color:#666">(${s.nim})</small></div>
+      <div class="sc-title">"${s.judul}"</div>
+    </div>`).join('');
+}
+
+// ─── FILTER & SEARCH ──────────────────────────────────────────────────────────
+function setFilter(btn, f){
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter=f;
+  renderCards();
+}
+function filterByProgram(val){currentProgram=val;renderCards()}
+function filterByLevel(level){currentProgram=level;currentFilter='all';renderCards();showView('dashboard')}
+function searchCards(q){searchQ=q;renderCards()}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+const viewMap={
+  dashboard:'view-dashboard',s1:'view-s1',s2:'view-s2',s3:'view-s3',
+  ujian:'view-ujian',dosen:'view-dosen',nilai:'view-nilai',cetak:'view-cetak'
+};
+function showView(key){
+  Object.values(viewMap).forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none'});
+  const v=document.getElementById(viewMap[key]||'view-dashboard');
+  if(v)v.style.display='block';
+  if(key==='s1')renderByLevel('S1','cards-s1');
+  if(key==='s2')renderByLevel('S2','cards-s2');
+  if(key==='s3')renderByLevel('S3','cards-s3');
+}
+function switchTab(el, key){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  showView(key);
+}
+
+// ─── SIDEBAR ──────────────────────────────────────────────────────────────────
+function setSbActive(el, key){
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  if(key)showView(key);
+  if(window.innerWidth<=700){toggleSidebar()}
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+let editId=null;
+function openModal(id){document.getElementById(id).classList.add('show');editId=null}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show')}));
+
+function editEntry(id){
+  const s=seminars.find(x=>x.id===id);if(!s)return;
+  editId=id;
+  document.getElementById('f-nama').value=s.nama;
+  document.getElementById('f-nim').value=s.nim;
+  document.getElementById('f-level').value=s.level;
+  document.getElementById('f-jenis').value=s.jenis;
+  document.getElementById('f-judul').value=s.judul;
+  // convert dd/mm/yyyy to yyyy-mm-dd for input[type=date]
+  const parts=s.tanggal.split('/');
+  if(parts.length===3)document.getElementById('f-tanggal').value=`${parts[2]}-${parts[1]}-${parts[0]}`;
+  document.getElementById('f-jam').value=s.jam.replace('.',':');
+  document.getElementById('f-ruangan').value=s.ruangan||'';
+  document.getElementById('f-hp').value=s.hp||'';
+  document.getElementById('f-p1').value=s.p1||'';
+  document.getElementById('f-p2').value=s.p2||'';
+  document.getElementById('form-modal').classList.add('show');
+}
+function deleteEntry(id){
+  if(!confirm('Hapus data seminar ini?'))return;
+  seminars=seminars.filter(s=>s.id!==id);
+  saveData();renderCards();showToast('Data dihapus');
+}
+
+function submitForm(){
+  const nama=document.getElementById('f-nama').value.trim();
+  const nim=document.getElementById('f-nim').value.trim();
+  const level=document.getElementById('f-level').value;
+  const jenis=document.getElementById('f-jenis').value;
+  const judul=document.getElementById('f-judul').value.trim();
+  const tanggalRaw=document.getElementById('f-tanggal').value;
+  const jam=document.getElementById('f-jam').value;
+  if(!nama||!nim||!level||!jenis||!judul||!tanggalRaw){
+    showToast('Harap isi semua field wajib (*)',true);return;
+  }
+  // convert yyyy-mm-dd to dd/mm/yyyy
+  const p=tanggalRaw.split('-');
+  const tanggal=`${p[2]}/${p[1]}/${p[0]}`;
+  const entry={
+    id:editId||nextId++,
+    nama,nim,level,jenis,judul,
+    tanggal,jam:jam.replace(':','.'),
+    ruangan:document.getElementById('f-ruangan').value,
+    hp:document.getElementById('f-hp').value,
+    p1:document.getElementById('f-p1').value,
+    p2:document.getElementById('f-p2').value
+  };
+  if(editId){seminars=seminars.map(s=>s.id===editId?entry:s)}
+  else{seminars.push(entry)}
+  saveData();closeModal('form-modal');renderCards();
+  showToast(editId?'Data berhasil diupdate!':'Data seminar berhasil disimpan!');
+  editId=null;
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, isError=false){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.style.background=isError?'#c0392b':'#1a5c2a';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ─── COPY LINK ────────────────────────────────────────────────────────────────
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    showToast('Link berhasil disalin! ✅');
+  }).catch(()=>{
+    showToast('Link: '+window.location.href);
+  });
+}
+
+// ─── HELP ─────────────────────────────────────────────────────────────────────
+function showHelp(){
+  alert('📚 PANDUAN SINGKAT\n\n• Klik "Form Mahasiswa" atau "Form Pendaftaran" untuk tambah data seminar baru\n• Filter jadwal menggunakan tombol Hari-H, H-1, H-2/H-3\n• Klik Edit untuk ubah data, Hapus untuk hapus\n• Kirim WAG untuk notifikasi dewan penguji\n• Data tersimpan otomatis di browser (localStorage)\n• Bisa dibuka di HP/Android melalui browser Chrome/Firefox\n\n💡 Bagikan link halaman ini ke rekan untuk akses bersama!');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+// Set today's date as default for form
+document.getElementById('f-tanggal').valueAsDate=new Date();
+renderCards();
+</script>
+</body>
+</html>
